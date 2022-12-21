@@ -1,24 +1,24 @@
 import { CustomTable } from "./customTable.js";
 import { movies } from "./data.js";
 
-// Instanciate new CustomTable object 
-let customTable = new CustomTable();
-
-// Creating new well-formed table with custom 'id' and 'classes'
-let table = customTable.createTable('user-table', 'table table-responsive table-striped m-0');
-
-// Append table to an element
-let appendElement = document.getElementById('append-element');
-appendElement.append(table);
+/** 
+ * Instanciate new CustomTable object.
+ * This creates a new table element, with thead and tbody elements 
+ * Also provides "id" and "class" attributes to the table
+ * 
+ * Class constructor arguments: "tableId" and "tableClasses"
+ */ 
+let customTable = new CustomTable('user-table', 'table table-responsive table-striped m-0');
 
 /**
- * Easier way:
+ * Append table to an html element
  * 
- *  document
- *      .getElementById('append-element')
- *      .append(customTable.createTable('user-table', 'table table-responsive table-striped'));
- * 
+ * To access the table element, just use "customTable.element"
  */
+let appendElement = document.getElementById('append-element');
+let table = customTable.element;
+
+appendElement.append(table);
 
 
 /**
@@ -69,8 +69,7 @@ let options = {
  * "movies" Array is an import from data.js. It's just a sample, used to build the table.
  * 
  */ 
-
-customTable.fillTable(table, movies, options);
+customTable.fillTable(movies, options);
 
 
 // "getMovie" is a custom function that returns the movie by the title

@@ -1,11 +1,42 @@
 export class CustomTable {
-    constructor() { }
+    /**
+     * 
+     * On object instance, creates an HTML 'table' element with 'thead' and 'tbody'.
+     * Also provides 'id' and 'class' attributes to the table as parameters.
+     * 
+     * @param {String} tableId Table element 'id' attribute
+     * @param {String} tableClasses Table element 'class' attribute
+     * 
+     */
+    constructor(tableId = '', tableClasses = '') {
+        this.table = this.createTable(tableId, tableClasses);
+    }
 
     /**
      * 
-     * @param {Element} children Elements to be appended to the button
-     * @param {Object} attributes Button optional attributes (Example: Id, Classes, OnClick, Title)
+     * Returns the created 'table' element
+     * 
+     * @returns {Element} Custom Table Element
+     * 
+     */
+    get element() {
+        return this.table;
+    }
+
+    /**
+     * **Add-On**
+     * 
+     * Custom button creation with: 
+     * 
+     * *children*: Can be an HTML Element, for example: svg, i, img or String text
+     * 
+     * *attributes*: Button attributes to add, for example: id, class, title, onclick, data-set, disabled.
+     * The attributes will be added as String with 'setAttributes' method, for each object key and value.
+     * 
+     * @param {Element} children Elements to be appended to the button. Also handles Strings
+     * @param {Object} attributes Button optional attributes Object.
      * @returns {Element} Button with Classes, Id, onClick Function, Title and Children Elements
+     * 
      */
     createButton(children = '', attributes = {}) {
         let btn = document.createElement('button');
@@ -22,6 +53,9 @@ export class CustomTable {
     }
 
     /**
+     * 
+     * Creates well-formed HTML 'table', with 'thead' and 'tbody' elements.
+     * Also provides 'id' and 'class' attributes to the table.
      * 
      * @param {String} tableId 
      * @param {String} tableClasses 
@@ -44,13 +78,14 @@ export class CustomTable {
 
     /**
      * 
-     * @param {Element} table 
-     * @param {String} tableElement 
-     * @param {String} elementType 
+     * Fill the table selected element with data
+     * 
+     * @param {String} tableElement Only accepts *thead* or *tbody* as String
+     * @param {String} elementType Only accepts *th* or *td* as String
      * @param {Array} data 
      * 
      */
-    #fillTableElement(table, tableElement, elementType, data) {
+    #fillTableElement(tableElement, elementType, data) {
         let tr = document.createElement('tr');
 
         data.forEach(dataValue => {
@@ -62,35 +97,53 @@ export class CustomTable {
             tr.append(element);
         });
 
-        let selectedElement = table.querySelector(tableElement);
+        let selectedElement = this.table.querySelector(tableElement);
         selectedElement.append(tr);
     }
 
     /**
      * 
-     * @param {Element} table 
+     * Fill the created table with *data* Array.
+     * Uses *option* Object to customize the table
+     * 
+     * **Options**:
+     * 
+     * **splice**: How much data is going to be removed from each object in the array. 
+     * 
+     * Default: 0 (None)
+     * 
+     * **headers**: String Array of custom table headers to be displayed. 
+     * 
+     * Default: Object.keys(data[0]) (The keys of the first object of *data* JSON)
+     * 
+     * **action**: Callable custom function. 
+     * Receives *values* Array of each Object in the JSON. 
+     * Can get and modify each value before filling the Table.
+     * Also receives *splicedData* Array, containing the spliced data of each object in the Array, specified by the *splice* key.
+     * 
+     * Default: (values, splicedData) => {} (Empty function)
+     * 
      * @param {JSON} data 
      * @param {Object} options Options (Number splice, Array headers, CallableFunction action)
      * 
      */
-    fillTable(table, data, options) {
+    fillTable(data, options) {
+        if (data.length === 0) { return }
+
         // Initialize options
         const defaultOptions = {
             'splice': 0,
-            'headers': [],
+            'headers': Object.keys(data[0]),
             'action': (values, splicedData) => { }
         }
 
         options = Object.assign(defaultOptions, options);
 
-        // Define table headers
-        let headers = options.headers.length == 0 ? Object.keys(data[0]) : options.headers;
-
         // Splice data from headers
-        this.#spliceData(headers, options.splice);
+        this.#spliceData(options.headers, options.splice);
 
         // Fill table headers
-        this.#fillTableElement(table, 'thead', 'th', headers);
+        this.#fillTableElement('thead', 'th', options.headers);
 
         // Loop through table data
         data.forEach(row => {
@@ -102,11 +155,17 @@ export class CustomTable {
             options.action(values, splicedData);
 
             // fill table with custom data values
-            this.#fillTableElement(table, 'tbody', 'td', values);
+            this.#fillTableElement('tbody', 'td', values);
         });
     }
 
     /**
+     * 
+     * Shift data from an Array of values.
+     * 
+     * Shift length is equal to the *splice* option.
+     *
+     * Returns an Array with the shifted data.
      * 
      * @param {Array} data 
      * @param {Number} length Splice/Shift length
