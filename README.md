@@ -1,2 +1,3 @@
-# customTables
- Auto-generated HTML tables with Javascript (JQuery)
+# CustomTables
+
+ Render HTML structured tables with JSON type data, using pure Javascript.
