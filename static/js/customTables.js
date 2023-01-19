@@ -1,3 +1,7 @@
+/**
+ * @author Guilherme Rocha
+ * @repository (https://github.com/guilherme-or/CustomTables)
+ */
 export class CustomTable {
     /**
      * 
@@ -110,18 +114,18 @@ export class CustomTable {
      * 
      * **splice**: How much data is going to be removed from each object in the array. 
      * 
-     * Default: 0 (None)
+     * _Default_: 0 (None)
      * 
      * **headers**: String Array of custom table headers to be displayed. 
      * 
-     * Default: Object.keys(data[0]) (The keys of the first object of *data* JSON)
+     * _Default_: Object.keys(data[0]) (The keys of the first object of *data* JSON)
      * 
      * **action**: Callable custom function. 
      * Receives *values* Array of each Object in the JSON. 
      * Can get and modify each value before filling the Table.
      * Also receives *splicedData* Array, containing the spliced data of each object in the Array, specified by the *splice* key.
      * 
-     * Default: (values, splicedData) => {} (Empty function)
+     * _Default_: (values, splicedData) => {} (Empty function)
      * 
      * @param {JSON} data 
      * @param {Object} options Options (Number splice, Array headers, CallableFunction action)
